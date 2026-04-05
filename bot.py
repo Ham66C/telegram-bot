@@ -16,13 +16,13 @@ def translate_text(text):
     except:
         return text
 
-# فلترة
+# فلترة AI
 def is_relevant(title):
     return any(word.lower() in title.lower() for word in KEYWORDS)
 
-# إرسال أفضل خبر
+# إرسال أفضل خبر AI جديد
 async def send_news():
-    print("Checking news...")
+    print("Checking AI news...")
     best_article = None
 
     for url in FEEDS:
@@ -32,10 +32,21 @@ async def send_news():
             if entry.link in sent_links:
                 continue
 
-            if is_relevant(entry.title):
-                best_article = entry
-                break
-        
+            # خاص يكون AI
+            if not is_relevant(entry.title):
+                continue
+
+            # خاص يكون جديد (آخر 24 ساعة)
+            if hasattr(entry, "published_parsed"):
+                article_time = time.mktime(entry.published_parsed)
+                now = time.time()
+
+                if now - article_time > 86400:
+                    continue
+
+            best_article = entry
+            break
+
         if best_article:
             break
 
